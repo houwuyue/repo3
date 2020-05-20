@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.4.1.js"></script>
+
+</head>
+<body onload="f()">
+    <div style="width:270px;height:650px;position: absolute;background-image: url(img/123.jpg)">
+        <div style="border: 1px solid #7fdcd3;">
+            <h3 style="text-align: center;margin-top: 10px;">个人信息:</h3>
+            <h4 style="margin-left: 10px;">欢迎你！&nbsp;<span id="sp1"></span></h4>
+            <h4 style="margin-left: 10px;">注册时间：&nbsp;<span id="sp2"></span> </h4>
+            <h4 style="margin-left: 10px;">有效时间：&nbsp;<span id="sp3"></span></h4>
+            <h4 style="margin-left: 10px;">上次登陆时间：&nbsp;<span id="sp4"></span></h4>
+            <h4 style="margin-left: 10px;">登陆次数：&nbsp;<span id="sp5"></span></h4>
+        </div>
+        <div style="border: 1px solid #7fdcd3;">
+            <h3 style="text-align: center;margin-top: 10px;">动态信息:</h3>
+            <h4 style="margin-left: 10px;">1.XXX旅游</h4>
+            <h4 style="margin-left: 10px;">2.XXX旅游</h4>
+            <h4 style="margin-left: 10px;">3.XXX旅游</h4>
+            <h4 style="margin-left: 10px;">4.XXX旅游</h4>
+            <h4 style="margin-left: 10px;">5.XXX旅游</h4>
+        </div>
+    </div>
+        <!--接受信息-->
+        <script type="text/javascript">
+            function f() {
+                var span1 = document.getElementById("sp1");
+                var span2 =document.getElementById("sp2");
+                var span3 = document.getElementById("sp3");
+                var span4 = document.getElementById("sp4");
+                var span5 = document.getElementById("sp5");
+                $.ajax({
+                    type:"post",
+                    url:"servlet1.mvc/getdata.mvc",
+                    success:function (data) {
+                        span1.innerText=data.name;
+                        span2.innerText=data.create_time;
+                        span3.innerText=data.postdve_time;
+                        span4.innerText=data.last_time;
+                        span5.innerText=data.login_count;
+                     }
+                 })
+             }
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+    <script type="text/javascript" src="js/jquery-3.4.1.js">
+
+    </script>
+</head>
+<body>
+<script type="text/javascript">
+    function f() {
+        $.ajax({
+            type:"post",
+            url:"servlet.mvc/get_data.mvc",
+            data:"name=蒋旭",
+            success:function (data) {
+                for (var i=0; i<data.length; i++) {
+                    document.write(data[i].doctor_name+"&nbsp;");
+                    document.write(data[i].title+"<br>");
+                }
+            }
+        })
+    }
+</script>
+<input type="button" value="提交" onclick="f()">
+</body>
+</html>
+</html>

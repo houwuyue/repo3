@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资讯</title>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.4.1.js"></script>
+</head>
+<body onload="f()">
+        <div style="width: 82%;height:80%;position: absolute;top: 30px;left: 10%">
+            <span style="margin-left: 10px;">团期编号：&nbsp;<span id="sp1"></span></span>
+            <span style="margin-left: 210px;">单价：&nbsp;<span id="sp2"></span> </span>
+            <span style="margin-left: 210px;">预计人数：&nbsp;<span id="sp3"></span></span>
+            <span style="margin-left: 210px;">剩余人数：&nbsp;<span id="sp4"></span></span>
+            <button style="margin-left: 80px;" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">添加旅客</button>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                添加旅客
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            姓名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="name1"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<input type="text" id="sex"/><br />
+                            <br />
+                            出生日期：<input type="text" id="birthday"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;联系电话：<input type="text" id="phone"/><br />
+                            <br />
+                            证件类型：<input type="text" id="car_type"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证件号:&nbsp;&nbsp;<input type="text" id="identity_card"/><br />
+                            <br />
+                            旅客类型：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="type"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="remarks"/><br />
+                            <br />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"  class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="insert()">
+                                提交
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+			<table id="table" class="table table-hover">
+				<tr>
+					<td>姓名</td>
+					<td>性别</td>
+					<td>出生日期</td>
+					<td>证件类型</td>
+					<td>证件号</td>
+					<td>联系电话</td>
+					<td>游客类型</td>
+					<td>备注</td>
+				</tr>
+			</table>
+        </div>
+        <!--接受信息-->
+        <script type="text/javascript">
+            function f() {
+                var span1 = document.getElementById("sp1");
+                var span2 =document.getElementById("sp2");
+                var span3 = document.getElementById("sp3");
+                var span4 = document.getElementById("sp4");
+                $.ajax({
+                    type:"post",
+                    url:"/TravelManagement_war/servlet.mvc/updateData1.mvc",
+                    success:function (data) {
+                        span1.innerText=data.ts_middle_pk;
+                        span2.innerText=data.price;
+                        span3.innerText=data.count;
+                        span4.innerText=data.count;
+                    }
+                })
+            }
+
+            function insert(){
+                alert("111");
+                var name1 = document.getElementById("name1").value;
+                var sex = document.getElementById("sex").value;
+                var birthday = document.getElementById("birthday").value;
+                var phone = document.getElementById("phone").value;
+                var car_type = document.getElementById("car_type").value;
+                var identity_card = document.getElementById("identity_card").value;
+                var type = document.getElementById("type").value;
+                var remarks = document.getElementById("remarks").value;
+                alert(name1+sex+phone+"    "+birthday);
+                $.ajax({
+                    type:"post",
+                    url:"/TravelManagement_war/servlet1.mvc/InsertData.mvc",
+                    data:{
+                        "name1":name1,
+                        "sex":sex,
+                        "birthday":birthday,
+                        "phone":phone,
+                        "car_type":car_type,
+                        "identity_card":identity_card,
+                        "type":type,
+                        "remarks":remarks
+                    },
+                    success:function(data){
+                        alert("添加成功");
+                    }
+                });
+
+            }
+
+
+        </script>
+</body>
+</html>

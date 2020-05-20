@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bunfly.dao.GetUser">
+
+    <select id="all" resultType="Doctor">
+        select * from doctor
+    </select>
+
+    <select id="selectUserData" resultType="Account">
+        select * from account where user=#{user} and password=#{password}
+    </select>
+
+    <select id="selectAll" resultType="Travel_agency">
+        select * from travel_agency where travel_agency_pk=#{travel_agency_pk}
+    </select>
+<!--    登录次数-->
+    <update id="upDataCount" parameterType="Integer" >
+        update travel_agency set login_count = login_count+1 where travel_agency_pk=#{travel_agency_pk}
+    </update>
+
+<!--    登陆时间-->
+    <update id="upDataDate" parameterType="Travel_agency">
+        update travel_agency set last_time =#{last_time} where travel_agency_pk=#{travel_agency_pk}
+    </update>
+
+<!--    查询时间-->
+    <select id="selectDate" resultType="String" parameterType="Integer">
+        select last_time from travel_agency where travel_agency_pk=#{travel_agency_pk}
+    </select>
+
+<!--  查询所有出团信息  -->
+    <select id="selectAllInfo" resultType="Ts_middle">
+        select * from ts_middle
+    </select>
+
+    <!--查询总条数-->
+    <select id="getAllCount" resultType="Integer">
+        select count(*) from ts_middle
+    </select>
+    <!-- 模糊查询   -->
+    <select id="selectInfo" resultType="Ts_middle">
+        select * from ts_middle
+        <bind name="details" value="'%'+val+'%'"/>
+        where details like #{details}
+
+    </select>
+
+    <select id="selectCount" resultType="Ts_middle">
+        select count,price,ts_middle_pk from ts_middle where ts_middle_pk=#{ts_middle_pk}
+    </select>
+
+    <insert id="InsertData" parameterType="Tourist">
+        insert into Tourist(name1,sex,car_type,birthday,identity_card,phone,type,remarks,ts_middle_pk) value (#{name1},#{sex},#{car_type},#{birthday},#{identity_card},#{phone},#{type},#{remarks},#{ts_middle_pk})
+    </insert>
+
+
+
+
+</mapper>

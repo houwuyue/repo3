@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资讯</title>
+    <script src="js/jquery-3.4.1.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/layui.css">
+<!--    <link rel="stylesheet" href="css/code.css">-->
+<!--    <link rel="stylesheet" href="css/layer.css">-->
+<!--    <link rel="stylesheet" href="css/laydate.css">-->
+    <link rel="stylesheet" href="css/layui.mobile.css">
+    <script src="js/layui.all.js"></script>
+</head>
+<body onload="f(1)">
+    <div style="width: 82%;height:80%;position: absolute;top: 30px;left: 10%">
+     <div class="input-group">
+         <input style="width: 500px;margin-left: 250px;" type="text" class="form-control" placeholder="输入关键字查询" id="myInput">
+
+        <button class="btn btn-default" type="button" onclick="selectDetails()">Go!</button>
+
+    </div>
+        <script type="text/javascript">
+            function f(num) {
+                $.ajax({
+                    type:"POST",
+                    url:"/TravelManagement_war/Test.mvc",
+                    data:{
+                      "pageNumber": num
+                    },//servlet.mvc/getalldata.mvc
+                    success:function (jsData) {
+
+                        $("#myTable tr:not(:first)").empty("");
+                        console.log(jsData)//打印在控制台
+
+                        for (var i=0;i<jsData.rows.length;i++){
+                            var $myTable  = $("#myTable");
+                            var $tr = $myTable[0].insertRow();
+
+                            var $depart_time = $tr.insertCell(0);
+                            var $ts_middle_pk = $tr.insertCell(1);
+                            var $price = $tr.insertCell(2);
+                            var $count = $tr.insertCell(3);
+                            var $over_time = $tr.insertCell(4);
+                            var $details = $tr.insertCell(5);
+                            var $buttons = $tr.insertCell(6);
+
+
+                            $depart_time.innerText = jsData.rows[i].depart_time;
+                            $ts_middle_pk.innerText = jsData.rows[i].ts_middle_pk;
+                            $price.innerText = jsData.rows[i].price;
+                            $count.innerText = jsData.rows[i].count;
+                            $over_time.innerText = jsData.rows[i].over_time;
+                            $details.innerText = jsData.rows[i].details;
+                            var $button = $(`<button class="start" onclick ="baoming(this)"/></button>`);
+                            $button.text("报名");
+                            $buttons.appendChild($button.get(0));
+
+                        }
+
+                    }
+                });
+            }
+            function  getData() {
+                $.ajax({
+                    type:"POST",
+                    url:"/TravelManagement_war/Test.mvc",
+                    data:{
+                        "pageNumber": num
+                    },//servlet.mvc/getalldata.mvc
+                    success:function (jsData) {
+
+                        $("#myTable tr:not(:first)").empty("");
+                        console.log(jsData)
+
+                        for (var i=0;i<jsData.rows.length;i++){
+                            var $myTable  = $("#myTable");
+                            var $tr = $myTable[0].insertRow();
+
+                            var $depart_time = $tr.insertCell(0);
+                            var $ts_middle_pk = $tr.insertCell(1);
+                            var $price = $tr.insertCell(2);
+                            var $count = $tr.insertCell(3);
+                            var $over_time = $tr.insertCell(4);
+                            var $details = $tr.insertCell(5);
+                            var $buttons = $tr.insertCell(6);
+
+
+                            $depart_time.innerText = jsData.rows[i].depart_time;
+                            $ts_middle_pk.innerText = jsData.rows[i].ts_middle_pk;
+                            $price.innerText = jsData.rows[i].price;
+                            $count.innerText = jsData.rows[i].count;
+                            $over_time.innerText = jsData.rows[i].over_time;
+                            $details.innerText = jsData.rows[i].details;
+                            var $button = $(`<button class="start" onclick ="baoming(this)"/></button>`);
+                            $button.text("报名");
+                            $buttons.appendChild($button.get(0));
+
+                        }
+
+                    }
+                })
+            }
+        </script>
+    <table id="myTable" class="table table-hover">
+        <tr>
+            <td>出团日期</td>
+            <td>团期编号</td>
+            <td>单价</td>
+            <td>预收人数</td>
+            <td>结束时间</td>
+            <td>详细</td>
+            <td>报名</td>
+        </tr>
+    </table>
+        <div id="paging" onclick="getData()" style="margin-top: 250px;margin-left: 900px"></div>
+</div>
+<script>
+    let countTeam = 0;
+    $(document).ready(function(){
+        $.ajax({
+            type: "get",
+            url: "servlet.mvc/getTeamCityCount.mvc",
+            async: false,
+            success: function(data){
+                console.log(data);
+                countTeam = data.countTeam;//countTeam是总记录数，查询数据库
+
+                paging(countTeam);
+            }
+
+        });
+    });
+    function paging(countTeam){
+        layui.use('laypage', function(){
+            var laypage = layui.laypage;
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'paging', //注意，这里的 test1 是 ID，不用加 # 号
+                count: countTeam ,//数据总数，从服务端得到
+                limit:2,
+                jump: function(obj, first){
+                    //obj包含了当前分页的所有参数，比如：
+                    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                    console.log(obj.limit); //得到每页显示的条数
+                    //首次不执行
+                    if(!first){
+                        //do something
+                    }
+                    num = obj.curr;//点击后获得当前页数，num是当前页数
+                }
+            });
+        });
+    }
+    setTimeout(function () { //延迟加载第一页
+        $(document).ready(function(){
+            $.ajax({
+                type: "get",
+                url: "servlet.mvc/getTeamCity.mvc",
+                async: true,
+                data:{
+                    "PageNumber":num
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+    }, 2000);
+
+</script>
+<script>
+    function selectDetails(){
+        var details = document.getElementById("myInput").value;
+        $.ajax({
+            type: "post",
+            url: "servlet.mvc/selectDetails.mvc",
+            async: true,
+            data:{
+                "details":details
+            },
+            success: function(data) {
+                $("#myTable tr:not(:first)").empty("");
+                var jsData = data;
+                for (var i=0;i<jsData.length;i++){
+                    var $myTable  = $("#myTable");
+                    var $tr = $myTable[0].insertRow();
+
+                    var $depart_time = $tr.insertCell(0);
+                    var $ts_middle_pk = $tr.insertCell(1);
+                    var $price = $tr.insertCell(2);
+                    var $count = $tr.insertCell(3);
+                    var $over_time = $tr.insertCell(4);
+                    var $details = $tr.insertCell(5);
+                    var $buttons = $tr.insertCell(6);
+
+                    $depart_time.innerText = jsData[i].depart_time;
+                    $ts_middle_pk.innerText = jsData[i].ts_middle_pk;
+                    $price.innerText = jsData[i].price;
+                    $count.innerText = jsData[i].count;
+                    $over_time.innerText = jsData[i].over_time;
+                    $details.innerText = jsData[i].details;
+                    var $button = $(`<button class="start" onclick ="baoming(this)"/></button>`);
+                    $button.text("报名");
+                    $buttons.appendChild($button.get(0));
+
+                }
+            }
+        });
+    }
+    
+</script>
+    <script type="text/javascript">
+        function baoming(e){
+            // var xx = $(e).parents("tr").children("#id").text();//获得id
+            // window.location.href="/Travel/message.mvc/baoming.mvc?id="+xx;
+
+            var tr = $(e).closest('tr');//找到tr元素
+            var ts_middle_pk = tr.find('td:eq(1)').html();//找到td元素
+            window.location.href="servlet.mvc/updateData.mvc?ts_middle_pk="+ts_middle_pk;
+
+        }
+
+    </script>
+
+</body>
+</html>
